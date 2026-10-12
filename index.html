@@ -1,200 +1,299 @@
 
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#171016">
 <title>Um lugar entre palavras</title>
-
 <style>
-:root {
-  --bg: #171016;
-  --panel: #241820;
-  --rose: #d99aa9;
-  --text: #f8edf0;
-  --muted: #c3aeb7;
-  --line: #503440;
-}
-
-* { box-sizing: border-box; }
-
-body {
-  margin: 0;
-  background: radial-gradient(ellipse at top, #422431 0%, transparent 58%), var(--bg);
-  color: var(--text);
-  font-family: Georgia, "Times New Roman", serif;
-  min-height: 100vh;
-}
-
-header {
-  text-align: center;
-  padding: 48px 22px 30px;
-}
-
-.moon { font-size: 32px; }
-
-h1 {
-  font-size: clamp(30px, 8vw, 46px);
-  font-weight: normal;
-  margin: 12px 0;
-  color: #f5d9e1;
-}
-
-.subtitle {
-  color: var(--muted);
-  font-size: 15px;
-  line-height: 1.7;
-  max-width: 340px;
-  margin: auto;
-}
-
-main {
-  width: min(100% - 32px, 680px);
-  margin: 0 auto 60px;
-}
-
-#search {
-  width: 100%;
-  padding: 14px 16px;
-  border: 1px solid var(--line);
-  border-radius: 14px;
-  background: #21171e;
-  color: var(--text);
-  font-size: 16px;
-  margin: 10px 0 22px;
-  outline: none;
-}
-
-.section-title {
-  font-size: 13px;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: var(--rose);
-  margin: 10px 0 16px;
-}
-
-#letters {
-  display: grid;
-  gap: 12px;
-}
-
-.letter-card {
-  width: 100%;
-  text-align: left;
-  padding: 19px;
-  border: 1px solid var(--line);
-  border-radius: 15px;
-  background: linear-gradient(130deg, #2d1d27, #21171e);
-  color: var(--text);
-  cursor: pointer;
-  font: inherit;
-}
-
-.letter-card:active { transform: scale(.985); }
-.letter-card:hover { border-color: var(--rose); }
-
-.letter-card strong {
-  display: block;
-  font-size: 18px;
-  font-weight: normal;
-  line-height: 1.4;
-}
-
-.letter-card span {
-  display: block;
-  color: var(--muted);
-  font: 12px Arial, sans-serif;
-  margin-top: 8px;
-}
-
-#reader {
-  display: none;
-  background: rgba(36, 24, 32, .96);
-  border: 1px solid var(--line);
-  border-radius: 18px;
-  padding: 23px 20px;
-}
-
-#reader h2 {
-  color: #f3cbd7;
-  font-size: 27px;
-  line-height: 1.3;
-  font-weight: normal;
-}
-
-#content {
-  white-space: pre-wrap;
-  font-size: 18px;
-  line-height: 1.95;
-  overflow-wrap: anywhere;
-}
-
-.actions {
-  display: flex;
-  gap: 10px;
-  margin-top: 25px;
-}
-
-.actions button, .back {
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  padding: 12px 15px;
-  background: #392531;
-  color: var(--text);
-  font-size: 14px;
-  cursor: pointer;
-}
-
-.back { margin-bottom: 10px; }
-
-footer {
-  text-align: center;
-  color: #a9909b;
-  font-size: 13px;
-  padding: 15px 24px 40px;
-  line-height: 1.8;
-}
-
-.empty {
-  color: var(--muted);
-  line-height: 1.7;
-  text-align: center;
-  padding: 20px 5px;
-}
+:root{--bg:#171016;--panel:#241820;--rose:#d99aa9;--text:#f8edf0;--muted:#c3aeb7;--line:#503440}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at top,#422431,transparent 58%),var(--bg);color:var(--text);font-family:Georgia,serif;min-height:100vh}
+header{text-align:center;padding:36px 20px 24px}
+.moon{font-size:32px}
+h1{font-size:clamp(30px,8vw,46px);font-weight:normal;color:#f5d9e1;margin:12px 0}
+.subtitle{color:var(--muted);line-height:1.7;max-width:360px;margin:auto}
+main{width:min(100% - 28px,700px);margin:auto auto 50px}
+button,input,textarea{font:inherit}
+button{cursor:pointer}
+input,textarea{width:100%;padding:13px;border:1px solid var(--line);border-radius:11px;background:#21171e;color:var(--text);margin:6px 0 12px}
+textarea{min-height:220px;resize:vertical;line-height:1.8}
+button{border:1px solid var(--line);border-radius:11px;background:#392531;color:var(--text);padding:12px 15px}
+button:hover{border-color:var(--rose)}
+.primary{background:#714455;border-color:#a96f83}
+.row{display:flex;gap:9px;flex-wrap:wrap}
+.row button{flex:1}
+.panel{background:#241820eF;border:1px solid var(--line);border-radius:17px;padding:18px;margin:14px 0}
+h2{font-weight:normal;color:#f3cbd7}
+h3{font-weight:normal;margin:0 0 8px}
+.small{font:13px Arial,sans-serif;color:var(--muted);line-height:1.6}
+.hidden{display:none!important}
+.card{display:block;text-align:left;width:100%;margin:9px 0;background:linear-gradient(130deg,#2d1d27,#21171e);padding:16px}
+.card strong{display:block;font-weight:normal;font-size:18px}
+.card span{display:block;color:var(--muted);font:12px Arial,sans-serif;margin-top:7px}
+#content{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.95;font-size:18px}
+.status{color:var(--rose);white-space:pre-wrap}
+footer{text-align:center;color:#a9909b;padding:10px 20px 35px;font-size:13px;line-height:1.8}
 </style>
 </head>
 <body>
-
 <header>
   <div class="moon">☾ ✦</div>
   <h1>Um lugar entre palavras</h1>
-  <p class="subtitle">
-    Algumas coisas são difíceis de dizer olhando nos olhos.
-    Então deixei que as palavras encontrassem seu caminho até você.
-  </p>
+  <p class="subtitle">Algumas coisas são difíceis de dizer olhando nos olhos. Então deixei que as palavras encontrassem seu caminho até você.</p>
 </header>
-
 <main>
-  <section id="library">
-    <p class="section-title">Cartas para você</p>
-    <input id="search" type="search" placeholder="Procurar uma carta..." aria-label="Procurar uma carta">
-    <div id="letters"></div>
+  <section id="login" class="panel">
+    <h2>Entre na biblioteca</h2>
+    <p class="small">Use seu e-mail e sua senha cadastrados no Firebase Authentication.</p>
+    <form id="loginForm">
+      <label for="email">E-mail</label>
+      <input id="email" type="email" autocomplete="username" required>
+      <label for="password">Senha</label>
+      <input id="password" type="password" autocomplete="current-password" required>
+      <button class="primary" type="submit">Entrar</button>
+    </form>
+    <p id="loginStatus" class="status small" role="status"></p>
   </section>
 
-  <section id="reader">
-    <button class="back" id="back">← Todas as cartas</button>
-    <h2 id="title"></h2>
-    <div id="content"></div>
-    <div class="actions">
-      <button id="previous">← Anterior</button>
-      <button id="next">Próxima →</button>
+  <section id="app" class="hidden">
+    <div class="panel">
+      <p class="small">Você entrou como <span id="userEmail"></span></p>
+      <button id="logout">Sair</button>
     </div>
+
+    <div class="panel">
+      <h2>Nossos cantinhos 🌙</h2>
+      <div class="row">
+        <button class="primary" data-owner="mel">Cartas da Mel</button>
+        <button class="primary" data-owner="brenda">Cartas da Brenda</button>
+      </div>
+      <p id="spaceDescription" class="small">Escolha um espaço para ver as cartas.</p>
+    </div>
+
+    <section id="library" class="panel hidden">
+      <div class="row">
+        <h2 id="spaceTitle" style="flex:1">Cartas</h2>
+        <button id="newLetter">+ Adicionar carta</button>
+      </div>
+      <input id="search" type="search" placeholder="Procurar uma carta...">
+      <div id="letters"></div>
+      <p id="listStatus" class="small status" role="status"></p>
+    </section>
+
+    <section id="editor" class="panel hidden">
+      <h2>Escrever uma carta 💌</h2>
+      <form id="letterForm">
+        <label for="letterTitle">Título</label>
+        <input id="letterTitle" maxlength="160" required placeholder="Dê um nome à sua carta">
+        <label for="letterContent">Sua carta</label>
+        <textarea id="letterContent" required placeholder="Escreva aqui tudo o que seu coração quiser dizer..."></textarea>
+        <div class="row">
+          <button class="primary" type="submit">Salvar carta</button>
+          <button id="cancelEdit" type="button">Cancelar</button>
+        </div>
+      </form>
+      <p id="saveStatus" class="small status" role="status"></p>
+    </section>
+
+    <section id="reader" class="panel hidden">
+      <button id="back">← Todas as cartas</button>
+      <h2 id="readTitle"></h2>
+      <p id="readMeta" class="small"></p>
+      <div id="content"></div>
+      <div class="row" style="margin-top:20px">
+        <button id="editLetter">Editar</button>
+        <button id="deleteLetter">Excluir carta</button>
+      </div>
+    </section>
   </section>
 </main>
+<footer>Feito de palavras, lembranças e sentimentos. ♡<br>Um pequeno lugar no mundo que existe só entre as linhas.</footer>
 
-<footer>
-  Feito de palavras, lembranças e sentimentos. ♡<br>
-  Um pequeno lugar no mundo que existe só entre as linhas.
-</footer>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.16.0/firebase-app.js";
+import {
+  getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut
+} from "https://www.gstatic.com/firebasejs/12.16.0/firebase-auth.js";
+import {
+  getFirestore, collection, addDoc, getDocs, doc, updateDoc,
+  deleteDoc, query, where, serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.16.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAKqO81mQX692m6eDb9h263zX8TqWKHcy8",
+  authDomain: "nossa-biblioteca-c9513.firebaseapp.com",
+  projectId: "nossa-biblioteca-c9513",
+  storageBucket: "nossa-biblioteca-c9513.firebasestorage.app",
+  messagingSenderId: "554907257691",
+  appId: "1:554907257691:web:4c0e8159e0b22f2b59287e"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+const $ = id => document.getElementById(id);
+let currentSpace = null;
+let letters = [];
+let selectedLetter = null;
+
+function message(id, text) { $(id).textContent = text; }
+function show(id, visible) { $(id).classList.toggle("hidden", !visible); }
+
+$("loginForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  message("loginStatus", "Entrando...");
+  try {
+    await signInWithEmailAndPassword(auth, $("email").value.trim(), $("password").value);
+    message("loginStatus", "");
+  } catch (err) {
+    message("loginStatus", "Não foi possível entrar. Confira o e-mail, a senha e se o acesso por e-mail/senha está ativado no Firebase.");
+  }
+});
+
+$("logout").addEventListener("click", () => signOut(auth));
+
+onAuthStateChanged(auth, user => {
+  show("login", !user);
+  show("app", !!user);
+  if (user) $("userEmail").textContent = user.email || "";
+  else {
+    currentSpace = null;
+    letters = [];
+    selectedLetter = null;
+    show("library", false);
+    show("editor", false);
+    show("reader", false);
+  }
+});
+
+document.querySelectorAll("[data-owner]").forEach(button => {
+  button.addEventListener("click", () => openSpace(button.dataset.owner));
+});
+
+async function openSpace(space) {
+  currentSpace = space;
+  selectedLetter = null;
+  $("spaceTitle").textContent = space === "mel" ? "Cartas da Mel" : "Cartas da Brenda";
+  $("spaceDescription").textContent = "Espaço selecionado: " + $("spaceTitle").textContent;
+  show("library", true);
+  show("editor", false);
+  show("reader", false);
+  await loadLetters();
+}
+
+async function loadLetters() {
+  message("listStatus", "Carregando cartas...");
+  $("letters").replaceChildren();
+  try {
+    const q = query(collection(db, "letters"), where("owner", "==", currentSpace));
+    const snapshot = await getDocs(q);
+    letters = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+    letters.sort((a,b) => (a.title || "").localeCompare(b.title || "", "pt-BR"));
+    renderLetters();
+    message("listStatus", letters.length ? "" : "Este espaço ainda não tem cartas. Clique em “+ Adicionar carta” para escrever a primeira.");
+  } catch (err) {
+    message("listStatus", "Não consegui carregar as cartas. Verifique as regras do Firestore e o acesso da sua conta.");
+  }
+}
+
+function renderLetters() {
+  const list = $("letters");
+  list.replaceChildren();
+  const term = $("search").value.trim().toLocaleLowerCase("pt-BR");
+  const filtered = letters.filter(l => (l.title || "").toLocaleLowerCase("pt-BR").includes(term));
+  filtered.forEach(letter => {
+    const button = document.createElement("button");
+    button.className = "card";
+    const title = document.createElement("strong");
+    title.textContent = letter.title || "Carta sem título";
+    const meta = document.createElement("span");
+    meta.textContent = "Abrir carta";
+    button.append(title, meta);
+    button.addEventListener("click", () => readLetter(letter));
+    list.append(button);
+  });
+  if (!filtered.length && letters.length) message("listStatus", "Nenhuma carta encontrada para essa pesquisa.");
+}
+$("search").addEventListener("input", renderLetters);
+
+$("newLetter").addEventListener("click", () => {
+  selectedLetter = null;
+  $("letterForm").reset();
+  message("saveStatus", "");
+  show("editor", true);
+  show("reader", false);
+  $("letterTitle").focus();
+});
+
+$("cancelEdit").addEventListener("click", () => {
+  show("editor", false);
+  selectedLetter ? readLetter(selectedLetter) : show("library", true);
+});
+
+$("letterForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  if (!currentSpace || !auth.currentUser) return;
+  const title = $("letterTitle").value.trim();
+  const content = $("letterContent").value.trim();
+  if (!title || !content) return;
+  message("saveStatus", "Salvando sua carta...");
+  const data = {
+    owner: currentSpace,
+    title,
+    content,
+    updatedAt: serverTimestamp(),
+    createdBy: auth.currentUser.email
+  };
+  try {
+    if (selectedLetter) {
+      await updateDoc(doc(db, "letters", selectedLetter.id), data);
+    } else {
+      data.createdAt = serverTimestamp();
+      await addDoc(collection(db, "letters"), data);
+    }
+    show("editor", false);
+    selectedLetter = null;
+    await loadLetters();
+  } catch (err) {
+    message("saveStatus", "Não foi possível salvar. Confira as regras de leitura e gravação do Firestore.");
+  }
+});
+
+function readLetter(letter) {
+  selectedLetter = letter;
+  $("readTitle").textContent = letter.title || "Carta sem título";
+  $("content").textContent = letter.content || "";
+  $("readMeta").textContent = letter.createdBy ? "Escrita por " + letter.createdBy : "";
+  show("library", false);
+  show("editor", false);
+  show("reader", true);
+}
+$("back").addEventListener("click", () => {
+  show("reader", false);
+  show("library", true);
+});
+$("editLetter").addEventListener("click", () => {
+  if (!selectedLetter) return;
+  $("letterTitle").value = selectedLetter.title || "";
+  $("letterContent").value = selectedLetter.content || "";
+  message("saveStatus", "");
+  show("reader", false);
+  show("editor", true);
+});
+$("deleteLetter").addEventListener("click", async () => {
+  if (!selectedLetter || !confirm("Tem certeza de que deseja excluir esta carta?")) return;
+  try {
+    await deleteDoc(doc(db, "letters", selectedLetter.id));
+    selectedLetter = null;
+    show("reader", false);
+    show("library", true);
+    await loadLetters();
+  } catch (err) {
+    alert("Não foi possível excluir. Verifique as regras do Firestore.");
+  }
+});
+</script>
+</body>
+</html>
