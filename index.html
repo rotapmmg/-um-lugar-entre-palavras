@@ -322,8 +322,25 @@ async function recordAccess(user) {
       email: user.email || "",
       createdAt: serverTimestamp()
     });
+
+    // Envia uma notificação por e-mail
+    if (!sessionStorage.getItem("nossaBibliotecaEmailSent")) {
+      await emailjs.send(
+        "service_egtqi5t",
+        "template_49n18am",
+        {
+          title: "Novo acesso à Nossa Biblioteca 🌙",
+          name: "Nossa Biblioteca",
+          message: "A conta acabou de entrar na biblioteca."
+        },
+        "zPuMRpYUWetqAdw6E"
+      );
+
+      sessionStorage.setItem("nossaBibliotecaEmailSent", "1");
+    }
+
   } catch (error) {
-    console.error("Não foi possível registrar o acesso:", error);
+    console.error("Erro ao registrar acesso ou enviar notificação:", error);
   }
 }
 
