@@ -205,6 +205,24 @@ e na delicadeza de tudo aquilo que significam.</p></div>
   <button id="logoutFromSpaces" style="margin-top:14px;width:100%">Sair da conta</button>
 </section>
 
+<button id="openAccessHistory" style="margin-top:10px;width:100%">
+  🌙 Ver histórico de acessos
+</button>
+
+<section id="accessHistoryScreen" class="panel hidden">
+  <div class="top-actions">
+    <button id="backFromHistory">← Voltar aos cantinhos</button>
+  </div>
+  <h2 class="section-title">🌙 Histórico de acessos</h2>
+  <p class="subtitle">
+    Esta biblioteca registra a data e a hora em que a conta autenticada
+    abre o espaço. O registro não identifica a pessoa que está usando a conta.
+  </p>
+  <button id="refreshHistory" class="primary">Atualizar histórico</button>
+  <div id="accessHistoryList"></div>
+  <p id="accessHistoryStatus" class="status" role="status"></p>
+</section>
+
 <section id="libraryScreen" class="panel hidden">
   <div class="top-actions"><button id="backToSpaces">← Voltar aos cantinhos</button><button id="newLetter">＋ Adicionar carta</button></div>
   <h2 id="libraryTitle" class="section-title">Cartas</h2>
@@ -269,7 +287,14 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const db = getFirestore(app);
 const $ = id => document.getElementById(id);
-const screens = ["loginScreen","spaceChooser","libraryScreen","readerScreen","editorScreen"];
+const screens = [
+  "loginScreen",
+  "spaceChooser",
+  "accessHistoryScreen",
+  "libraryScreen",
+  "readerScreen",
+  "editorScreen"
+];
 let currentUser = null, currentSpace = null, currentLetters = [], editingId = null, openedLetter = null;
 let editorReturnScreen = "libraryScreen";
 
@@ -284,6 +309,80 @@ function setStatus(id, message, isError=false) {
 }
 function spaceName(space) { return space === "mel" ? "Cartas da Mel" : "Cartas da Brenda"; }
 
+$("openAccessHistory").addEventListener("click", loadAccessHistory);
+$("backFromHistory").addEventListener("click", () => showScreen("spaceChooser"));
+$("refreshHistory").addEventListener("click", loadAccessHistory);
+
+async function recordAccess(user) {
+  if (!user) return;
+
+  try {
+    await addDoc(collection(db, "access_logs"), {
+      event: "biblioteca_aberta",
+      email: user.email || "",
+      createdAt: serverTimestamp()
+    });
+  } catch (error) {
+    console.error("Não foi possível registrar o acesso:", error);
+  }
+}
+
+async function loadAccessHistory() {
+  if (!currentUser) return;
+
+  showScreen("accessHistoryScreen");
+  $("accessHistoryList").innerHTML = "";
+  setStatus("accessHistoryStatus", "Carregando histórico...");
+
+  try {
+    const snapshot = await getDocs(collection(db, "access_logs"));
+
+    const entries = snapshot.docs
+      .map(item => ({ id: item.id, ...item.data() }))
+      .sort((a, b) =>
+        (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0)
+      );
+
+    const list = $("accessHistoryList");
+
+    if (!entries.length) {
+      setStatus("accessHistoryStatus", "Ainda não há acessos registrados.");
+      return;
+    }
+
+    entries.forEach(entry => {
+      const card = document.createElement("article");
+      card.className = "letter-card";
+
+      const title = document.createElement("h3");
+      title.textContent = "Abertura da biblioteca";
+
+      const details = document.createElement("p");
+      const date = entry.createdAt?.toDate();
+
+      details.textContent = date
+        ? date.toLocaleString("pt-BR", {
+            dateStyle: "short",
+            timeStyle: "medium"
+          })
+        : "Registro recente; horário ainda não disponível.";
+
+      card.append(title, details);
+      list.appendChild(card);
+    });
+
+    setStatus("accessHistoryStatus",
+      `${entries.length} acesso(s) registrado(s).`);
+  } catch (error) {
+    setStatus(
+      "accessHistoryStatus",
+      "Não foi possível consultar o histórico. Verifique as regras do Firestore. (" +
+        error.code + ")",
+      true
+    );
+  }
+}
+
 $("loginForm").addEventListener("submit", async event => {
   event.preventDefault();
   setStatus("loginStatus","Entrando...");
@@ -293,14 +392,24 @@ $("loginForm").addEventListener("submit", async event => {
     setStatus("loginStatus","Não consegui entrar. Confira o e-mail, a senha e a configuração do Firebase. ("+error.code+")",true);
   }
 });
-onAuthStateChanged(auth, user => {
+
+onAuthStateChanged(auth, async user => {
   currentUser = user;
-  if(user) { setStatus("loginStatus",""); showScreen("spaceChooser"); }
-  else {
-    currentSpace = null; currentLetters = []; editingId = null; openedLetter = null;
+
+  if (user) {
+    setStatus("loginStatus", "");
+    showScreen("spaceChooser");
+
+    await recordAccess(user);
+  } else {
+    currentSpace = null;
+    currentLetters = [];
+    editingId = null;
+    openedLetter = null;
     showScreen("loginScreen");
   }
 });
+
 document.querySelectorAll("[data-space]").forEach(button => {
   button.addEventListener("click", async () => { currentSpace = button.dataset.space; await loadLetters(); });
 });
